@@ -3,7 +3,6 @@
 namespace MediaWiki\Extension\EditCredit;
 
 use MediaWiki\Extension\EditCredit\Tags;
-use MediaWiki\Hook\ParserFirstCallInitHook;
 
 class Hooks
 {
