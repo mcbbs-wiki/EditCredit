@@ -40,6 +40,17 @@
 			]
 		}
 	},
+	"APIListModules": {
+		"editcredit": {
+			"class": "MediaWiki\\Extension\\EditCredit\\ApiQueryEditCredit",
+			"services": [
+				"ActorNormalization",
+				"DBLoadBalancer",
+				"UserIdentityLookup",
+				"UserNameUtils"
+			]
+		}
+	},
 	"config": {
 		"CreditCSSClass": {
 			"value": {

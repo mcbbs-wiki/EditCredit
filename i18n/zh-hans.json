@@ -1,0 +1,11 @@
+{
+    "editCredit.css":"/* EditCredit.css */",
+    "apihelp-query+editcredit-summary": "列出指定用户的编辑积分。",
+    "apihelp-query+editcredit-param-user":"要获取编辑积分的用户。",
+    "apihelp-query+editcredit-example-user": "列出用户<kbd>Example</kbd>的编辑积分和等级。",
+    "apihelp-query+editcredit-example-user-level": "列出用户<kbd>Example</kbd>的编辑等级。",
+    "apihelp-query+editcredit-param-type":"要包含的编辑积分信息。",
+    "apihelp-query+editcredit-paramvalue-type-credit":"用户的编辑积分。",
+    "apihelp-query+editcredit-paramvalue-type-level":"用户的编辑等级。",
+    "apihelp-query+editcredit-paramvalue-type-cssClass":"用户的编辑积分对应的CSS类。"
+}

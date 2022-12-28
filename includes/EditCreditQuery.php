@@ -8,9 +8,11 @@ use MediaWiki\User\UserIdentity;
 
 class EditCreditQuery {
 	private $editCountQuery;
+	private $config;
 
 	public function __construct( EditCountQuery $editCountQuery ) {
 		$this->editCountQuery = $editCountQuery;
+		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'EditCredit' );
 	}
 
 	public function queryCredit( UserIdentity $user ) {
@@ -21,17 +23,8 @@ class EditCreditQuery {
 		return $credit;
 	}
 
-	public function queryLevel( int $credit ) {
-		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'EditCredit' );
-		$scores = $config->get( 'CreditLevels' );
-		$levelCSS = $config->get( 'CreditCSSClass' );
-		$lvl = 0;
-		foreach ( $scores as $index => $score ) {
-			if ( $credit < $score ) {
-				$lvl = $index;
-				break;
-			}
-		}
+	public function queryLevelCSSClass( int $credit ) {
+		$levelCSS = $this->config->get( 'CreditCSSClass' );
 		$class = '';
 		foreach ( $levelCSS as $least => $level ) {
 			if ( $credit < $least ) {
@@ -39,6 +32,18 @@ class EditCreditQuery {
 				break;
 			}
 		}
-		return [ 'level' => $lvl, 'cssClass' => $class ];
+		return $class;
+	}
+
+	public function queryLevel( int $credit ) {
+		$scores = $this->config->get( 'CreditLevels' );
+		$lvl = 0;
+		foreach ( $scores as $index => $score ) {
+			if ( $credit < $score ) {
+				$lvl = $index;
+				break;
+			}
+		}
+		return $lvl;
 	}
 }
