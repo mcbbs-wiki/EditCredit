@@ -28,7 +28,7 @@ class ApiQueryEditCredit extends ApiQueryBase {
 		UserIdentityLookup $userIdentityLookup,
 		UserNameUtils $userNameUtils
 	) {
-		parent::__construct( $query, $moduleName, 'ec' );
+		parent::__construct( $query, $moduleName, 'ecr' );
 		$this->userIdentityLookup = $userIdentityLookup;
 		$this->userNameUtils = $userNameUtils;
 		$this->editCreditQuery = new EditCreditQuery( new EditCountQuery( $actorNormalization, $dbLoadBalancer ) );
