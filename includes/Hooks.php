@@ -33,7 +33,6 @@ class Hooks implements ParserFirstCallInitHook {
 
 	public function renderTagEditCredit( $input, array $args, Parser $parser, PPFrame $frame ) {
 		if ( isset( $args['username'] ) ) {
-			$parser->getOutput()->addModuleStyles( 'ext.editcredit.styles' );
 			$username = trim( $args['username'] );
 			$user = $this->userIdentityLookup->getUserIdentityByName( $username );
 			if ( !$user || $user->getId() === 0 ) {

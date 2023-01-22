@@ -31,15 +31,6 @@
 			"i18n"
 		]
 	},
-	"ResourceModules": {
-		"ext.editcredit.styles": {
-			"class": "MediaWiki\\Extension\\EditCredit\\CreditStyle",
-			"targets": [
-				"mobile",
-				"desktop"
-			]
-		}
-	},
 	"APIListModules": {
 		"editcredit": {
 			"class": "MediaWiki\\Extension\\EditCredit\\ApiQueryEditCredit",
