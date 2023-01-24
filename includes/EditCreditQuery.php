@@ -17,7 +17,11 @@ class EditCreditQuery extends EditCreditCalc {
 
 	public function __construct( ActorNormalization $actorNormalization,
 	ILoadBalancer $dbLoadBalancer, ConfigFactory $configFactory, HookContainer $hookContainer ) {
-		parent::__construct( new EditCountQuery( $actorNormalization, $dbLoadBalancer ), $configFactory, $hookContainer );
+		parent::__construct(
+			new EditCountQuery( $actorNormalization, $dbLoadBalancer ),
+			$configFactory,
+			$hookContainer
+			);
 		$this->dbLoadBalancer = $dbLoadBalancer;
 		$this->config = $configFactory->makeConfig( 'EditCredit' );
 		$this->hooks = $hookContainer;

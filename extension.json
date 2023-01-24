@@ -63,7 +63,9 @@
 				"ActorNormalization",
 				"DBLoadBalancer",
 				"UserIdentityLookup",
-				"UserNameUtils"
+				"UserNameUtils",
+				"ConfigFactory",
+				"HookContainer"
 			]
 		}
 	},

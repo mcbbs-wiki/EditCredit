@@ -5,7 +5,8 @@ namespace MediaWiki\Extension\EditCredit;
 use ApiBase;
 use ApiQuery;
 use ApiQueryBase;
-use MediaWiki\Extension\EditCount\EditCountQuery;
+use ConfigFactory;
+use MediaWiki\HookContainer\HookContainer;
 use MediaWiki\ParamValidator\TypeDef\UserDef;
 use MediaWiki\User\ActorNormalization;
 use MediaWiki\User\UserIdentityLookup;
@@ -26,12 +27,19 @@ class ApiQueryEditCredit extends ApiQueryBase {
 		ActorNormalization $actorNormalization,
 		ILoadBalancer $dbLoadBalancer,
 		UserIdentityLookup $userIdentityLookup,
-		UserNameUtils $userNameUtils
+		UserNameUtils $userNameUtils,
+		ConfigFactory $configFactory,
+		HookContainer $hookContainer
 	) {
 		parent::__construct( $query, $moduleName, 'ecr' );
 		$this->userIdentityLookup = $userIdentityLookup;
 		$this->userNameUtils = $userNameUtils;
-		$this->editCreditQuery = new EditCreditQuery( new EditCountQuery( $actorNormalization, $dbLoadBalancer ) );
+		$this->editCreditQuery = new EditCreditQuery(
+			$actorNormalization,
+			$dbLoadBalancer,
+			$configFactory,
+			$hookContainer
+			);
 	}
 
 	public function execute() {
@@ -67,10 +75,10 @@ class ApiQueryEditCredit extends ApiQueryBase {
 				$vals['credit'] = $this->editCreditQuery->queryCredit( $user );
 			}
 			if ( in_array( 'level', $params['type'] ) ) {
-				$vals['level'] = $this->editCreditQuery->queryLevel( $this->editCreditQuery->queryCredit( $user ) );
+				$vals['level'] = $this->editCreditQuery->calcLevel( $this->editCreditQuery->queryCredit( $user ) );
 			}
 			if ( in_array( 'cssClass', $params['type'] ) ) {
-				$vals['cssClass'] = $this->editCreditQuery->queryLevelCSSClass( $this->editCreditQuery->queryCredit( $user ) );
+				$vals['cssClass'] = $this->editCreditQuery->calcLevelCSSClass( $this->editCreditQuery->queryCredit( $user ) );
 			}
 			$result->addValue( [ 'query', $this->getModuleName() ], null, $vals );
 		}
@@ -95,9 +103,9 @@ class ApiQueryEditCredit extends ApiQueryBase {
 
 	protected function getExamplesMessages() {
 		return [
-			'action=query&list=editcredit&ecuser=Example'
+			'action=query&list=editcredit&ecruser=Example'
 				=> 'apihelp-query+editcredit-example-user',
-				'action=query&list=editcredit&ecuser=Example&ectype=level'
+				'action=query&list=editcredit&ecruser=Example&ecrtype=level'
 				=> 'apihelp-query+editcredit-example-user-level'
 		];
 	}
