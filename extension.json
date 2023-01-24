@@ -34,6 +34,28 @@
 			"i18n"
 		]
 	},
+	"ExtensionMessagesFiles": {
+		"EditCreditAlias": "EditCredit.i18n.alias.php"
+	},
+	"SpecialPages": {
+		"EditCredit": {
+			"class": "MediaWiki\\Extension\\EditCredit\\SpecialEditCredit",
+			"services": [
+				"ActorNormalization",
+				"DBLoadBalancer",
+				"UserIdentityLookup",
+				"ConfigFactory",
+				"HookContainer"
+			]
+		},
+		"EditCreditInfo": {
+			"class": "MediaWiki\\Extension\\EditCredit\\SpecialEditCreditInfo",
+			"services": [
+				"ConfigFactory"
+			]
+		},
+		"MostCreditUser": "MediaWiki\\Extension\\EditCredit\\SpecialMostCreditUser"
+	},
 	"APIListModules": {
 		"editcredit": {
 			"class": "MediaWiki\\Extension\\EditCredit\\ApiQueryEditCredit",
