@@ -16,7 +16,7 @@ require_once "$IP/maintenance/Maintenance.php";
 /**
  * Brief oneline description of Hello world.
  */
-class EditCreditCLI extends Maintenance {
+class InitEditCredit extends Maintenance {
 	public function __construct() {
 		parent::__construct();
 		$this->requireExtension( 'EditCredit' );
@@ -58,5 +58,5 @@ class EditCreditCLI extends Maintenance {
 	}
 }
 
-$maintClass = HelloWorld::class;
+$maintClass = InitEditCredit::class;
 require_once RUN_MAINTENANCE_IF_MAIN;
