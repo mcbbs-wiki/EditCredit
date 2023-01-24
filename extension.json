@@ -22,7 +22,9 @@
 			"services": [
 				"ActorNormalization",
 				"DBLoadBalancer",
-				"UserIdentityLookup"
+				"UserIdentityLookup",
+				"ConfigFactory",
+				"HookContainer"
 			]
 		}
 	},

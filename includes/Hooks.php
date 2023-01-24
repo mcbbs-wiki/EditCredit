@@ -2,29 +2,45 @@
 
 namespace MediaWiki\Extension\EditCredit;
 
+use ConfigFactory;
 use Html;
 use MediaWiki\Extension\EditCount\EditCountQuery;
 use MediaWiki\Hook\ParserFirstCallInitHook;
 use MediaWiki\User\ActorNormalization;
 use MediaWiki\User\UserIdentityLookup;
+use DatabaseUpdater;
 use Parser;
+use Exception;
+use MediaWiki\HookContainer\HookContainer;
 use PPFrame;
 use WikiMedia\Rdbms\ILoadBalancer;
 
 class Hooks implements ParserFirstCallInitHook {
 	private $userIdentityLookup;
 	private $editCreditQuery;
-
+	public static function onLoadExtensionSchemaUpdates(DatabaseUpdater $updater) {
+		$dir = __DIR__ . '/../sql';
+		$dbType = $updater->getDB()->getType();
+		if (!in_array($dbType, array('mysql'))) {
+				throw new Exception('Database type not currently supported');
+		}
+		$updater->addExtensionTable('edit_credit', "{$dir}/tables-generated.sql");
+		return true;
+	}
 	public function __construct(
 		ActorNormalization $actorNormalization,
 		ILoadBalancer $dbLoadBalancer,
-		UserIdentityLookup $userIdentityLookup
+		UserIdentityLookup $userIdentityLookup,
+		ConfigFactory $configFactory,
+		HookContainer $hookContainer
 	) {
 		$this->userIdentityLookup = $userIdentityLookup;
-		$this->editCreditQuery = new EditCreditQuery( new EditCountQuery(
+		$this->editCreditQuery = new EditCreditQuery( 
 			$actorNormalization,
-			$dbLoadBalancer
-		) );
+			$dbLoadBalancer,
+			$configFactory,
+			$hookContainer
+		 );
 	}
 
 	public function onParserFirstCallInit( $parser ) {
@@ -39,8 +55,8 @@ class Hooks implements ParserFirstCallInitHook {
 				return '';
 			}
 			$credit = $this->editCreditQuery->queryCredit( $user );
-			$level = $this->editCreditQuery->queryLevel( $credit );
-			$cssClass = $this->editCreditQuery->queryLevelCSSClass( $credit );
+			$level = $this->editCreditQuery->calcLevel( $credit );
+			$cssClass = $this->editCreditQuery->calcLevelCSSClass( $credit );
 			$type = $args['type'] ?? 'level';
 			if ( $type === 'level' ) {
 				$class = 'user-score-level ' . $cssClass;
