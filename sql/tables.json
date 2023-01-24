@@ -1,21 +1,21 @@
 [
 	{
-		"name": "edit_credit",
+		"name": "user_editcredit",
 		"columns": [
 			{
-				"name": "ec_id",
+				"name": "uc_id",
 				"comment": "User ID",
 				"type": "integer",
 				"options": { "notnull": true,"unsigned": true }
 			},
 			{
-				"name": "ec_credit",
+				"name": "uc_credit",
 				"comment": "User edit credit",
 				"type": "integer",
 				"options": { "notnull": true, "unsigned": true }
 			}
 		],
-		"indexes": [{ "name": "ec_credit", "columns": [ "ec_credit" ], "unique": false}],
-		"pk": [ "ec_id" ]
+		"indexes": [{ "name": "uc_credit", "columns": [ "uc_credit" ], "unique": false}],
+		"pk": [ "uc_id" ]
 	}
 ]

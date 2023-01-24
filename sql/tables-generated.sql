@@ -2,9 +2,9 @@
 -- Source: extensions/EditCredit/sql/tables.json
 -- Do not modify this file directly.
 -- See https://www.mediawiki.org/wiki/Manual:Schema_changes
-CREATE TABLE /*_*/edit_credit (
-  ec_id INT UNSIGNED NOT NULL,
-  ec_credit INT UNSIGNED NOT NULL,
-  INDEX ec_credit (ec_credit),
-  PRIMARY KEY(ec_id)
+CREATE TABLE /*_*/user_editcredit (
+  uc_id INT UNSIGNED NOT NULL,
+  uc_credit INT UNSIGNED NOT NULL,
+  INDEX uc_credit (uc_credit),
+  PRIMARY KEY(uc_id)
 ) /*$wgDBTableOptions*/;

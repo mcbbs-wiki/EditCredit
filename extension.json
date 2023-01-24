@@ -14,7 +14,8 @@
 		"MediaWiki\\Extension\\EditCredit\\": "includes/"
 	},
 	"Hooks": {
-		"ParserFirstCallInit": "handleHooks"
+		"ParserFirstCallInit": "handleHooks",
+		"LoadExtensionSchemaUpdates":"MediaWiki\\Extension\\EditCredit\\Hooks::onLoadExtensionSchemaUpdates"
 	},
 	"HookHandlers": {
 		"handleHooks": {
