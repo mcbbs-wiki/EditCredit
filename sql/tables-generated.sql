@@ -3,8 +3,8 @@
 -- Do not modify this file directly.
 -- See https://www.mediawiki.org/wiki/Manual:Schema_changes
 CREATE TABLE /*_*/user_editcredit (
-  uc_id INT UNSIGNED NOT NULL,
-  uc_credit INT UNSIGNED NOT NULL,
-  INDEX uc_credit (uc_credit),
-  PRIMARY KEY(uc_id)
+  ue_id INT UNSIGNED NOT NULL,
+  ue_credit INT UNSIGNED NOT NULL,
+  INDEX ue_credit (ue_credit),
+  PRIMARY KEY(ue_id)
 ) /*$wgDBTableOptions*/;
