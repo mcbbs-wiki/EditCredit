@@ -2,21 +2,22 @@
 
 namespace MediaWiki\Extension\EditCredit;
 
-use MediaWiki\Extension\EditCount\EditCountQuery;
-use MediaWiki\MediaWikiServices;
-use MediaWiki\User\UserIdentity;
-use MediaWiki\User\ActorNormalization;
-use ConfigFactory;
 use Config;
+use ConfigFactory;
+use MediaWiki\Extension\EditCount\EditCountQuery;
 use MediaWiki\HookContainer\HookContainer;
-use Wikimedia\Rdbms\ILoadBalancer;
+use MediaWiki\User\UserIdentity;
 
 class EditCreditCalc {
 	private EditCountQuery $editCountQuery;
 	private Config $config;
 	private HookContainer $hooks;
 
-	public function __construct( EditCountQuery $editCountQuery,ConfigFactory $configFactory,HookContainer $hookContainer ) {
+	public function __construct(
+		EditCountQuery $editCountQuery,
+		ConfigFactory $configFactory,
+		HookContainer $hookContainer
+ ) {
 		$this->editCountQuery = $editCountQuery;
 		$this->config = $configFactory->makeConfig( 'EditCredit' );
 		$this->hooks = $hookContainer;
