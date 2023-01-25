@@ -27,7 +27,7 @@
 			"class": "MediaWiki\\Extension\\EditCredit\\Hooks",
 			"services": [
 				"UserIdentityLookup",
-				"EditCredit.Query",
+				"EditCredit.EditCreditQuery",
 				"LinkRenderer"
 			]
 		}
@@ -45,7 +45,7 @@
 			"class": "MediaWiki\\Extension\\EditCredit\\SpecialEditCredit",
 			"services": [
 				"UserIdentityLookup",
-				"EditCredit.Query"
+				"EditCredit.EditCreditQuery"
 			]
 		},
 		"EditCreditInfo": {
@@ -65,7 +65,7 @@
 			"services": [
 				"UserIdentityLookup",
 				"UserNameUtils",
-				"EditCredit.Query"
+				"EditCredit.EditCreditQuery"
 			]
 		}
 	},

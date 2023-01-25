@@ -26,7 +26,7 @@ class InitEditCredit extends Maintenance {
 		$dbr = $dblb->getConnection( DB_REPLICA );
 		$dbw = $dblb->getConnection( DB_PRIMARY );
 		$uil = $mws->getUserIdentityLookup();
-		$editCreditCalc = $mws->getService( 'EditCredit.Query' );
+		$editCreditCalc = $mws->getService( 'EditCredit.EditCreditQuery' );
 		$userCreditIds = $dbr->newSelectQueryBuilder()
 			->select( 'ue_id' )
 			->from( 'user_editcredit' )
