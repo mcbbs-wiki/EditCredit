@@ -19,12 +19,12 @@ class EditCreditQuery {
 	private HookContainer $hooks;
 
 	public function __construct(
-		ActorNormalization $actorNormalization,
+		EditCountQuery $editCountQuery,
 		ILoadBalancer $dbLoadBalancer,
 		ConfigFactory $configFactory,
 		HookContainer $hookContainer
  ) {
-		$this->editCountQuery = new EditCountQuery( $actorNormalization, $dbLoadBalancer );
+		$this->editCountQuery = $editCountQuery;
 		$this->dbr = $dbLoadBalancer->getConnection( DB_REPLICA );
 		$this->dbw = $dbLoadBalancer->getConnection( DB_PRIMARY );
 		$this->config = $configFactory->makeConfig( 'EditCredit' );

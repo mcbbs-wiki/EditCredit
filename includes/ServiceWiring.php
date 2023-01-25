@@ -6,7 +6,7 @@ use MediaWiki\MediaWikiServices;
 return [
 	'EditCredit.Query' => static function ( MediaWikiServices $services ): EditCreditQuery {
 		return new EditCreditQuery(
-			$services->getActorNormalization(),
+			$services->getService('EditCountNeue.EditCountQuery'),
 			$services->getDBLoadBalancer(),
 			$services->getConfigFactory(),
 			$services->getHookContainer()
