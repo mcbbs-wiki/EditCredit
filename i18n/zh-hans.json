@@ -21,5 +21,6 @@
     "editcreditinfo":"编辑积分信息",
     "editcredit":"编辑积分",
     "editcredit-mostcredit-suffix":"$1 分",
-    "mostcredituser":"编辑积分排行"
+    "mostcredituser":"编辑积分排行",
+    "prefs-editcredit":"编辑积分："
 }

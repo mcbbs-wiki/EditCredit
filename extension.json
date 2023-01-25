@@ -19,6 +19,7 @@
 	"Hooks": {
 		"ParserFirstCallInit": "handleHooks",
 		"PageSaveComplete":"handleHooks",
+		"GetPreferences":"handleHooks",
 		"LoadExtensionSchemaUpdates":"MediaWiki\\Extension\\EditCredit\\Hooks::onLoadExtensionSchemaUpdates"
 	},
 	"HookHandlers": {
@@ -26,7 +27,8 @@
 			"class": "MediaWiki\\Extension\\EditCredit\\Hooks",
 			"services": [
 				"UserIdentityLookup",
-				"EditCredit.Query"
+				"EditCredit.Query",
+				"LinkRenderer"
 			]
 		}
 	},
@@ -52,7 +54,10 @@
 				"ConfigFactory"
 			]
 		},
-		"MostCreditUser": "MediaWiki\\Extension\\EditCredit\\SpecialMostCreditUser"
+		"MostCreditUser": {
+			"class":"MediaWiki\\Extension\\EditCredit\\SpecialMostCreditUser",
+			"services":["LanguageConverterFactory"]
+		}
 	},
 	"APIListModules": {
 		"editcredit": {

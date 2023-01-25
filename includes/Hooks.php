@@ -7,14 +7,22 @@ use DeferredUpdates;
 use Exception;
 use Html;
 use MediaWiki\Hook\ParserFirstCallInitHook;
+use MediaWiki\Linker\LinkRenderer;
+use MediaWiki\Preferences\Hook\GetPreferencesHook;
 use MediaWiki\Storage\Hook\PageSaveCompleteHook;
 use MediaWiki\User\UserIdentityLookup;
 use Parser;
 use PPFrame;
+use SpecialPage;
 
-class Hooks implements ParserFirstCallInitHook, PageSaveCompleteHook {
+class Hooks implements
+	ParserFirstCallInitHook,
+	PageSaveCompleteHook,
+	GetPreferencesHook
+{
 	private UserIdentityLookup $userIdentityLookup;
 	private EditCreditQuery $editCreditQuery;
+	private LinkRenderer $linkRenderer;
 
 	public static function onLoadExtensionSchemaUpdates( DatabaseUpdater $updater ) {
 		$dir = __DIR__ . '/../sql';
@@ -28,10 +36,12 @@ class Hooks implements ParserFirstCallInitHook, PageSaveCompleteHook {
 
 	public function __construct(
 		UserIdentityLookup $userIdentityLookup,
-		EditCreditQuery $editCreditQuery
+		EditCreditQuery $editCreditQuery,
+		LinkRenderer $linkRenderer
 	) {
 		$this->userIdentityLookup = $userIdentityLookup;
 		$this->editCreditQuery = $editCreditQuery;
+		$this->linkRenderer = $linkRenderer;
 	}
 
 	public function onParserFirstCallInit( $parser ) {
@@ -73,5 +83,19 @@ class Hooks implements ParserFirstCallInitHook, PageSaveCompleteHook {
 		$update = new UpdateCredit( $user, $this->editCreditQuery );
 		DeferredUpdates::addUpdate( $update );
 		// $update->doUpdate();
+	}
+
+	public function onGetPreferences( $user, &$preferences ) {
+		$link = $this->linkRenderer->makeKnownLink(
+			SpecialPage::getTitleFor( 'EditCredit', $user->getName() ),
+			$this->editCreditQuery->queryCredit( $user->getUser() )
+		);
+		$preferences['editcredit'] = [
+			'type' => 'info',
+			'raw' => true,
+			'label-message' => 'prefs-editcredit',
+			'default' => $link,
+			'section' => 'personal/info',
+		];
 	}
 }

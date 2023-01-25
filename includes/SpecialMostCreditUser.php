@@ -3,13 +3,16 @@ namespace MediaWiki\Extension\EditCredit;
 
 use Html;
 use Linker;
-use MediaWiki\MediaWikiServices;
+use MediaWiki\Languages\LanguageConverterFactory;
 use QueryPage;
 use Title;
 
 class SpecialMostCreditUser extends QueryPage {
-	public function __construct() {
+	private LanguageConverterFactory $lcf;
+
+	public function __construct( LanguageConverterFactory $lcf ) {
 		parent::__construct( 'MostCreditUser' );
+		$this->lcf = $lcf;
 	}
 
 	public function isExpensive() {
@@ -40,8 +43,7 @@ class SpecialMostCreditUser extends QueryPage {
 	}
 
 	public function formatResult( $skin, $result ) {
-		$lcf = MediaWikiServices::getInstance()->getLanguageConverterFactory();
-		$lc = $lcf->getLanguageConverter( $this->getContentLanguage() );
+		$lc = $this->lcf->getLanguageConverter( $this->getContentLanguage() );
 		$title = Title::makeTitleSafe( NS_USER, $result->username );
 		if ( !$title ) {
 			return Html::element(
