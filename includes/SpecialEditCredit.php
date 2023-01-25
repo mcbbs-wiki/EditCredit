@@ -1,34 +1,22 @@
 <?php
 namespace MediaWiki\Extension\EditCredit;
 
-use ConfigFactory;
 use Html;
 use HTMLForm;
-use MediaWiki\HookContainer\HookContainer;
-use MediaWiki\User\ActorNormalization;
 use MediaWiki\User\UserIdentity;
 use MediaWiki\User\UserIdentityLookup;
 use SpecialPage;
-use Wikimedia\Rdbms\ILoadBalancer;
 
 class SpecialEditCredit extends SpecialPage {
 	private UserIdentityLookup $userIdentityLookup;
 	private EditCreditQuery $editCreditQuery;
 
 	public function __construct(
-		ActorNormalization $actorNormalization,
-		ILoadBalancer $dbLoadBalancer,
 		UserIdentityLookup $userIdentityLookup,
-		ConfigFactory $configFactory,
-		HookContainer $hookContainer
+		EditCreditQuery $editCreditQuery
 	) {
 		parent::__construct( 'EditCredit' );
-		$this->editCreditQuery = new EditCreditQuery(
-			$actorNormalization,
-			$dbLoadBalancer,
-			$configFactory,
-			$hookContainer
-		);
+		$this->editCreditQuery = $editCreditQuery;
 		$this->userIdentityLookup = $userIdentityLookup;
 	}
 

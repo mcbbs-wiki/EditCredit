@@ -3,8 +3,6 @@
 namespace MediaWiki\Extension\EditCredit\Maintenance;
 
 use Maintenance;
-use MediaWiki\Extension\EditCount\EditCountQuery;
-use MediaWiki\Extension\EditCredit\EditCreditCalc;
 use MediaWiki\MediaWikiServices;
 
 $IP = getenv( 'MW_INSTALL_PATH' );
@@ -27,34 +25,30 @@ class InitEditCredit extends Maintenance {
 		$dblb = $mws->getDBLoadBalancer();
 		$dbr = $dblb->getConnection( DB_REPLICA );
 		$dbw = $dblb->getConnection( DB_PRIMARY );
-		$editCountQuery = new EditCountQuery(
-			$mws->getActorNormalization(),
-			$dblb
-		);
-		$ui = $mws->getUserIdentityLookup();
-		$editCreditCalc = new EditCreditCalc( $editCountQuery, $mws->getConfigFactory(), $mws->getHookContainer() );
+		$uil = $mws->getUserIdentityLookup();
+		$editCreditCalc = $mws->getService( 'EditCredit.Query' );
 		$userCreditIds = $dbr->newSelectQueryBuilder()
-		->select( 'ue_id' )
-		->from( 'user_editcredit' )
-		->caller( __METHOD__ )
-		->fetchFieldValues();
+			->select( 'ue_id' )
+			->from( 'user_editcredit' )
+			->caller( __METHOD__ )
+			->fetchFieldValues();
 		$userIds = $dbr->newSelectQueryBuilder()
 			->select( 'user_id' )
 			->from( 'user' )
 			->caller( __METHOD__ )
 			->fetchFieldValues();
-			foreach ( $userIds as $userId ) {
-				$this->output( "Processing user $userId ... " );
-				$credit = $editCreditCalc->calcEditcredit( $ui->getUserIdentityByUserId( $userId ) );
-				$this->output( "$credit ... " );
-				if ( in_array( $userId, $userCreditIds ) ) {
-					$dbw->update( 'user_editcredit', [ 'ue_credit' => $credit ], "ue_id = $userId" );
-					$this->output( "Update Success.\n" );
-				} else {
-					$dbw->insert( 'user_editcredit', [ 'ue_id' => $userId,'ue_credit' => $credit ] );
-					$this->output( "Create Success.\n" );
-				}
+		foreach ( $userIds as $userId ) {
+			$this->output( "Processing user $userId ... " );
+			$credit = $editCreditCalc->calcEditcredit( $uil->getUserIdentityByUserId( $userId ) );
+			$this->output( "$credit ... " );
+			if ( in_array( $userId, $userCreditIds ) ) {
+				$dbw->update( 'user_editcredit', [ 'ue_credit' => $credit ], "ue_id = $userId" );
+				$this->output( "Update Success.\n" );
+			} else {
+				$dbw->insert( 'user_editcredit', [ 'ue_id' => $userId,'ue_credit' => $credit ] );
+				$this->output( "Create Success.\n" );
 			}
+		}
 	}
 }
 

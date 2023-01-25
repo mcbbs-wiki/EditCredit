@@ -2,19 +2,17 @@
 
 namespace MediaWiki\Extension\EditCredit;
 
-use ConfigFactory;
 use DatabaseUpdater;
+use DeferredUpdates;
 use Exception;
 use Html;
 use MediaWiki\Hook\ParserFirstCallInitHook;
-use MediaWiki\HookContainer\HookContainer;
-use MediaWiki\User\ActorNormalization;
+use MediaWiki\Storage\Hook\PageSaveCompleteHook;
 use MediaWiki\User\UserIdentityLookup;
 use Parser;
 use PPFrame;
-use WikiMedia\Rdbms\ILoadBalancer;
 
-class Hooks implements ParserFirstCallInitHook {
+class Hooks implements ParserFirstCallInitHook, PageSaveCompleteHook {
 	private UserIdentityLookup $userIdentityLookup;
 	private EditCreditQuery $editCreditQuery;
 
@@ -29,19 +27,11 @@ class Hooks implements ParserFirstCallInitHook {
 	}
 
 	public function __construct(
-		ActorNormalization $actorNormalization,
-		ILoadBalancer $dbLoadBalancer,
 		UserIdentityLookup $userIdentityLookup,
-		ConfigFactory $configFactory,
-		HookContainer $hookContainer
+		EditCreditQuery $editCreditQuery
 	) {
 		$this->userIdentityLookup = $userIdentityLookup;
-		$this->editCreditQuery = new EditCreditQuery(
-			$actorNormalization,
-			$dbLoadBalancer,
-			$configFactory,
-			$hookContainer
-		 );
+		$this->editCreditQuery = $editCreditQuery;
 	}
 
 	public function onParserFirstCallInit( $parser ) {
@@ -70,5 +60,18 @@ class Hooks implements ParserFirstCallInitHook {
 		} else {
 			return '';
 		}
+	}
+
+	public function onPageSaveComplete(
+		$wikiPage,
+		$user,
+		$summary,
+		$flags,
+		$revisionRecord,
+		$editResult
+	) {
+		$update = new UpdateCredit( $user, $this->editCreditQuery );
+		DeferredUpdates::addUpdate( $update );
+		// $update->doUpdate();
 	}
 }

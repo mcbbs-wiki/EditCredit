@@ -3,6 +3,7 @@ namespace MediaWiki\Extension\EditCredit;
 
 use Html;
 use Linker;
+use MediaWiki\MediaWikiServices;
 use QueryPage;
 use Title;
 
@@ -39,6 +40,8 @@ class SpecialMostCreditUser extends QueryPage {
 	}
 
 	public function formatResult( $skin, $result ) {
+		$lcf = MediaWikiServices::getInstance()->getLanguageConverterFactory();
+		$lc = $lcf->getLanguageConverter( $this->getContentLanguage() );
 		$title = Title::makeTitleSafe( NS_USER, $result->username );
 		if ( !$title ) {
 			return Html::element(
@@ -52,7 +55,7 @@ class SpecialMostCreditUser extends QueryPage {
 		}
 		$link = $this->getLinkRenderer()->makeLink(
 			$title,
-			$this->getContentLanguage()->convert( $title->getPrefixedText() )
+			$lc->convert( $title->getPrefixedText() )
 		);
 		return $this->getLanguage()->specialList(
 			$link,

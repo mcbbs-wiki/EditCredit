@@ -13,19 +13,20 @@
 	"AutoloadNamespaces": {
 		"MediaWiki\\Extension\\EditCredit\\": "includes/"
 	},
+	"ServiceWiringFiles":[
+		"includes/ServiceWiring.php"
+	],
 	"Hooks": {
 		"ParserFirstCallInit": "handleHooks",
+		"PageSaveComplete":"handleHooks",
 		"LoadExtensionSchemaUpdates":"MediaWiki\\Extension\\EditCredit\\Hooks::onLoadExtensionSchemaUpdates"
 	},
 	"HookHandlers": {
 		"handleHooks": {
 			"class": "MediaWiki\\Extension\\EditCredit\\Hooks",
 			"services": [
-				"ActorNormalization",
-				"DBLoadBalancer",
 				"UserIdentityLookup",
-				"ConfigFactory",
-				"HookContainer"
+				"EditCredit.Query"
 			]
 		}
 	},
@@ -41,11 +42,8 @@
 		"EditCredit": {
 			"class": "MediaWiki\\Extension\\EditCredit\\SpecialEditCredit",
 			"services": [
-				"ActorNormalization",
-				"DBLoadBalancer",
 				"UserIdentityLookup",
-				"ConfigFactory",
-				"HookContainer"
+				"EditCredit.Query"
 			]
 		},
 		"EditCreditInfo": {
@@ -60,12 +58,9 @@
 		"editcredit": {
 			"class": "MediaWiki\\Extension\\EditCredit\\ApiQueryEditCredit",
 			"services": [
-				"ActorNormalization",
-				"DBLoadBalancer",
 				"UserIdentityLookup",
 				"UserNameUtils",
-				"ConfigFactory",
-				"HookContainer"
+				"EditCredit.Query"
 			]
 		}
 	},

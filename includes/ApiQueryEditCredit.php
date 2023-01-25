@@ -5,14 +5,10 @@ namespace MediaWiki\Extension\EditCredit;
 use ApiBase;
 use ApiQuery;
 use ApiQueryBase;
-use ConfigFactory;
-use MediaWiki\HookContainer\HookContainer;
 use MediaWiki\ParamValidator\TypeDef\UserDef;
-use MediaWiki\User\ActorNormalization;
 use MediaWiki\User\UserIdentityLookup;
 use MediaWiki\User\UserNameUtils;
 use Wikimedia\ParamValidator\ParamValidator;
-use WikiMedia\Rdbms\ILoadBalancer;
 
 class ApiQueryEditCredit extends ApiQueryBase {
 	private $editCreditQuery;
@@ -24,22 +20,14 @@ class ApiQueryEditCredit extends ApiQueryBase {
 	public function __construct(
 		ApiQuery $query,
 		$moduleName,
-		ActorNormalization $actorNormalization,
-		ILoadBalancer $dbLoadBalancer,
 		UserIdentityLookup $userIdentityLookup,
 		UserNameUtils $userNameUtils,
-		ConfigFactory $configFactory,
-		HookContainer $hookContainer
+		EditCreditQuery $editCreditQuery
 	) {
 		parent::__construct( $query, $moduleName, 'ecr' );
 		$this->userIdentityLookup = $userIdentityLookup;
 		$this->userNameUtils = $userNameUtils;
-		$this->editCreditQuery = new EditCreditQuery(
-			$actorNormalization,
-			$dbLoadBalancer,
-			$configFactory,
-			$hookContainer
-			);
+		$this->editCreditQuery = $editCreditQuery;
 	}
 
 	public function execute() {
@@ -78,7 +66,9 @@ class ApiQueryEditCredit extends ApiQueryBase {
 				$vals['level'] = $this->editCreditQuery->calcLevel( $this->editCreditQuery->queryCredit( $user ) );
 			}
 			if ( in_array( 'cssClass', $params['type'] ) ) {
-				$vals['cssClass'] = $this->editCreditQuery->calcLevelCSSClass( $this->editCreditQuery->queryCredit( $user ) );
+				$vals['cssClass'] = $this->editCreditQuery->calcLevelCSSClass(
+					$this->editCreditQuery->queryCredit( $user )
+				);
 			}
 			$result->addValue( [ 'query', $this->getModuleName() ], null, $vals );
 		}
