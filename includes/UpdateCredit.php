@@ -5,8 +5,8 @@ use DeferrableUpdate;
 use MediaWiki\User\UserIdentity;
 
 class UpdateCredit implements DeferrableUpdate {
-	private $user;
-	private $editCreditQuery;
+	private UserIdentity $user;
+	private EditCreditQuery $editCreditQuery;
 
 	public function __construct( UserIdentity $user, EditCreditQuery $editCreditQuery ) {
 		$this->user = $user;
