@@ -48,25 +48,10 @@ class ApiQueryEditCredit extends ApiQueryBase {
 
 	public function execute() {
 		$params = $this->extractRequestParams();
-		$names = [];
-		foreach ( $params['user'] as $u ) {
-			if ( $u === '' ) {
-				$encParamName = $this->encodeParamName( 'user' );
-				$this->dieWithError( [ 'apierror-paramempty', $encParamName ], "paramempty_$encParamName" );
-			}
-			$name = $this->userNameUtils->getCanonical( $u );
-			if ( $name == false ) {
-				$encParamName = $this->encodeParamName( 'user' );
-				$this->dieWithError(
-					[ 'apierror-baduser', $encParamName, wfEscapeWikiText( $u ) ], "baduser_$encParamName"
-				);
-			}
-			$names[] = $name;
-		}
 		$userIter = $this->userIdentityLookup
 			->newSelectQueryBuilder()
 			->caller( __METHOD__ )
-			->whereUserNames( $names )
+			->whereUserNames( $params['user'] )
 			->orderByName()
 			->fetchUserIdentities();
 		$result = $this->getResult();
