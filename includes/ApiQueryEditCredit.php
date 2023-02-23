@@ -48,12 +48,7 @@ class ApiQueryEditCredit extends ApiQueryBase {
 
 	public function execute() {
 		$params = $this->extractRequestParams();
-		$userIter = $this->userIdentityLookup
-			->newSelectQueryBuilder()
-			->caller( __METHOD__ )
-			->whereUserNames( $params['user'] )
-			->orderByName()
-			->fetchUserIdentities();
+		$userIter = array_filter( $params['user'], fn ( $v ): bool => $v->getId() !== 0 );
 		$result = $this->getResult();
 		$result->addIndexedTagName( [ 'query', $this->getModuleName() ], '' );
 		foreach ( $userIter as $user ) {
@@ -80,6 +75,7 @@ class ApiQueryEditCredit extends ApiQueryBase {
 			'user' => [
 				ParamValidator::PARAM_TYPE => 'user',
 				UserDef::PARAM_ALLOWED_USER_TYPES => [ 'name', 'id' ],
+				UserDef::PARAM_RETURN_OBJECT => true,
 				ParamValidator::PARAM_ISMULTI => true,
 				ParamValidator::PARAM_REQUIRED => true
 			],
