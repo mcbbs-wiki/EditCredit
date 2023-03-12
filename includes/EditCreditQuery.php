@@ -71,7 +71,7 @@ class EditCreditQuery {
 			->from( 'user_editcredit' )
 			->where( "ue_id = $userId" )
 			->fetchField();
-		return $dbCredit === false ? true : false;
+		return $dbCredit === true;
 	}
 
 	public function setUserCredit( UserIdentity $user, int $credit ) {
