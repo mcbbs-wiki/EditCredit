@@ -64,10 +64,16 @@ class SpecialEditCredit extends SpecialPage {
 
 	public function execute( $par ) {
 		$output = $this->getOutput();
+		if ($par) {
+			$output->redirect($this->getPageTitle()->getLinkURL([
+				'wpUsername' => $par,
+			]));
+			return;
+		}
 		$request = $this->getRequest();
 		$output->enableOOUI();
 		$this->setHeaders();
-		$username = $par ?? $request->getText( 'wpUsername' );
+		$username = $request->getText( 'wpUsername' );
 		if ( !$username ) {
 			$this->outputPage();
 			return;
