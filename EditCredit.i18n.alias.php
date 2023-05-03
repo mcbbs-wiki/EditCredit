@@ -12,3 +12,9 @@ $specialPageAliases['zh-hans'] = [
 	'EditCreditInfo' => [ '编辑积分信息' ],
 	'MostCreditUser' => [ '编辑积分排行' ]
 ];
+
+$magicWords = [];
+
+$magicWords['en'] = [
+	'editcredit' => [ 0, 'editcredit' ],
+];

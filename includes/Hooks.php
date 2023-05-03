@@ -64,8 +64,24 @@ class Hooks implements
 
 	public function onParserFirstCallInit( $parser ) {
 		$parser->setHook( 'edit-credit', [ $this,'renderTagEditCredit' ] );
+		$parser->setFunctionHook( 'editcredit', [ $this,'renderEditCredit' ] , Parser::SFH_OBJECT_ARGS);
 	}
-
+	public function renderEditCredit( Parser $parser, PPFrame $frame, array $args ) {
+		$username = isset( $args[0] ) ? trim( $frame->expand( $args[0] ) ) : '';
+		$user = $this->userIdentityLookup->getUserIdentityByName( $username );
+		if ( !$user || $user->getId() === 0 ) {
+			return '0';
+		}
+		$credit = $this->editCreditQuery->queryCredit( $user );
+		switch ($frame->expand($args[1])) {
+			case 'css':
+				return $this->editCreditQuery->calcLevelCSSClass( $credit );
+			case 'level':
+				return $this->editCreditQuery->calcLevel( $credit );
+			default:
+				return $credit;
+		}
+	}
 	public function renderTagEditCredit( $input, array $args, Parser $parser, PPFrame $frame ) {
 		if ( isset( $args['username'] ) ) {
 			$username = trim( $args['username'] );
