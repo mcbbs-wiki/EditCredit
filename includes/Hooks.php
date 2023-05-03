@@ -66,14 +66,15 @@ class Hooks implements
 		$parser->setHook( 'edit-credit', [ $this,'renderTagEditCredit' ] );
 		$parser->setFunctionHook( 'editcredit', [ $this,'renderEditCredit' ] );
 	}
-	public function renderEditCredit( Parser $parser, $username,$type='credit' ) {
+
+	public function renderEditCredit( Parser $parser, $username, $type = 'credit' ) {
 		$username = $username ?? '';
 		$user = $this->userIdentityLookup->getUserIdentityByName( $username );
 		if ( !$user || $user->getId() === 0 ) {
 			return '0';
 		}
 		$credit = $this->editCreditQuery->queryCredit( $user );
-		switch ($type) {
+		switch ( $type ) {
 			case 'css':
 				return $this->editCreditQuery->calcLevelCSSClass( $credit );
 			case 'level':
@@ -82,6 +83,7 @@ class Hooks implements
 				return $credit;
 		}
 	}
+
 	public function renderTagEditCredit( $input, array $args, Parser $parser, PPFrame $frame ) {
 		if ( isset( $args['username'] ) ) {
 			$username = trim( $args['username'] );
