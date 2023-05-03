@@ -66,7 +66,7 @@ class Hooks implements
 		$parser->setHook( 'edit-credit', [ $this,'renderTagEditCredit' ] );
 		$parser->setFunctionHook( 'editcredit', [ $this,'renderEditCredit' ] );
 	}
-	public function renderEditCredit( Parser $parser, $username,$type ) {
+	public function renderEditCredit( Parser $parser, $username,$type='credit' ) {
 		$username = $username ?? '';
 		$user = $this->userIdentityLookup->getUserIdentityByName( $username );
 		if ( !$user || $user->getId() === 0 ) {
