@@ -20,20 +20,19 @@
 
 namespace MediaWiki\Extension\EditCredit;
 
-use DeferrableUpdate;
-use MediaWiki\User\UserIdentity;
+use Job;
+use MediaWiki\MediaWikiServices;
 
-class UpdateCredit implements DeferrableUpdate {
-	private UserIdentity $user;
-	private EditCreditQuery $editCreditQuery;
-
-	public function __construct( UserIdentity $user, EditCreditQuery $editCreditQuery ) {
-		$this->user = $user;
-		$this->editCreditQuery = $editCreditQuery;
+class UpdateCreditJob extends Job {
+	public function __construct( $title, $params ) {
+		parent::__construct('updateEditCredit',$title,$params);
 	}
 
-	public function doUpdate() {
-		$credit = $this->editCreditQuery->calcEditcredit( $this->user );
-		$this->editCreditQuery->setUserCredit( $this->user, $credit );
+	public function run() {
+		$user = $this->params['user'];
+		/**@var EditCreditQuery */
+		$editCreditQuery = MediaWikiServices::getInstance()->getService('EditCredit.EditCreditQuery');
+		$credit = $editCreditQuery->calcEditcredit( $user );
+		$editCreditQuery->setUserCredit( $user, $credit );
 	}
 }

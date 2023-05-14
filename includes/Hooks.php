@@ -25,6 +25,7 @@ use DeferredUpdates;
 use Exception;
 use Html;
 use MediaWiki\Hook\ParserFirstCallInitHook;
+use MediaWiki\JobQueue\JobQueueGroupFactory;
 use MediaWiki\Linker\LinkRenderer;
 use MediaWiki\Preferences\Hook\GetPreferencesHook;
 use MediaWiki\Storage\Hook\PageSaveCompleteHook;
@@ -41,6 +42,7 @@ class Hooks implements
 	private UserIdentityLookup $userIdentityLookup;
 	private EditCreditQuery $editCreditQuery;
 	private LinkRenderer $linkRenderer;
+	private JobQueueGroupFactory $jobQueueGroupFactory;
 
 	public static function onLoadExtensionSchemaUpdates( DatabaseUpdater $updater ) {
 		$dir = __DIR__ . '/../sql';
@@ -55,11 +57,13 @@ class Hooks implements
 	public function __construct(
 		UserIdentityLookup $userIdentityLookup,
 		EditCreditQuery $editCreditQuery,
+		JobQueueGroupFactory $jobQueueGroupFactory,
 		LinkRenderer $linkRenderer
 	) {
 		$this->userIdentityLookup = $userIdentityLookup;
 		$this->editCreditQuery = $editCreditQuery;
 		$this->linkRenderer = $linkRenderer;
+		$this->jobQueueGroupFactory = $jobQueueGroupFactory;
 	}
 
 	public function onParserFirstCallInit( $parser ) {
@@ -116,9 +120,8 @@ class Hooks implements
 		$revisionRecord,
 		$editResult
 	) {
-		$update = new UpdateCredit( $user, $this->editCreditQuery );
-		DeferredUpdates::addUpdate( $update );
-		// $update->doUpdate();
+		$job = new UpdateCreditJob( $wikiPage->getTitle(), ['user'=>$user] );
+		$this->jobQueueGroupFactory->makeJobQueueGroup()->push($job);
 	}
 
 	public function onGetPreferences( $user, &$preferences ) {

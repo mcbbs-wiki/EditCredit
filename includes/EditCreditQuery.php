@@ -53,7 +53,7 @@ class EditCreditQuery {
 		$dbCredit = $this->dbr->newSelectQueryBuilder()
 			->select( 'ue_credit' )
 			->from( 'user_editcredit' )
-			->where( "ue_id = $userId" )
+			->where( ["ue_id"=>$userId] )
 			->fetchField();
 		if ( $dbCredit === false ) {
 			$calcCredit = $this->calcEditcredit( $user );
@@ -69,7 +69,7 @@ class EditCreditQuery {
 		$dbCredit = $this->dbr->newSelectQueryBuilder()
 			->select( 'ue_credit' )
 			->from( 'user_editcredit' )
-			->where( "ue_id = $userId" )
+			->where( ["ue_id"=>$userId] )
 			->fetchField();
 		return $dbCredit !== false;
 	}
@@ -84,7 +84,7 @@ class EditCreditQuery {
 
 	private function updateUserCredit( UserIdentity $user, int $credit ) {
 		$userId = $user->getId();
-		$this->dbw->update( 'user_editcredit', [ 'ue_credit' => $credit ], "ue_id = $userId" );
+		$this->dbw->update( 'user_editcredit', [ 'ue_credit' => $credit ], ["ue_id"=>$userId] );
 	}
 
 	private function insertUserCredit( UserIdentity $user, int $credit ) {
