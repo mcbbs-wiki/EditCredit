@@ -47,10 +47,15 @@ class Hooks implements
 	public static function onLoadExtensionSchemaUpdates( DatabaseUpdater $updater ) {
 		$dir = __DIR__ . '/../sql';
 		$dbType = $updater->getDB()->getType();
-		if ( !in_array( $dbType, [ 'mysql' ] ) ) {
-				throw new Exception( 'Database type not currently supported' );
+		if ( $dbType==='mysql' ) {
+			$updater->addExtensionTable( 'user_editcredit', "{$dir}/tables-generated.sql" );
+		} else if ($dbType === 'sqlite') {
+			$updater->addExtensionTable( 'user_editcredit', "{$dir}/sqlite/tables-generated.sql" );
+		} else if($dbType==='postgres') {
+			$updater->addExtensionTable( 'user_editcredit', "{$dir}/postgres/tables-generated.sql" );
+		} else {
+			throw new Exception( 'Database type not currently supported' );
 		}
-		$updater->addExtensionTable( 'user_editcredit', "{$dir}/tables-generated.sql" );
 		return true;
 	}
 
